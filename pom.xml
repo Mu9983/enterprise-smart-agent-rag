@@ -50,8 +50,6 @@
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        mybatis依赖-->
-
 <!--        jwt依赖-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -70,10 +68,16 @@
             <version>0.12.6</version>
             <scope>runtime</scope>
         </dependency>
+<!--        mybatis依赖-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>4.0.1</version>
+        </dependency>
+<!--        redis依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,14 +1,19 @@
 package com.mu9983.filter;
 
 import com.mu9983.utils.JwtUtils;
+import com.mu9983.utils.UserContext;
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Component
 @Slf4j
+@WebFilter(urlPatterns = "/*")
 public class TokenFilter implements Filter {
 
     @Override
@@ -16,6 +21,7 @@ public class TokenFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String token = request.getHeader("token");
+        UserContext.setToken(token);
         String requestURI = request.getRequestURI();
         if (requestURI.contains("/login")) {
             log.info("登录请求，放行");

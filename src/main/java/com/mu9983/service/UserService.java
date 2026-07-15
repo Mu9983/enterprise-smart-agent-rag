@@ -5,5 +5,7 @@ import com.mu9983.entity.User;
 
 public interface UserService {
 
-    LoginInfo Login(User user);
+    LoginInfo login(User user);
+
+    void logout(String token);
 }
