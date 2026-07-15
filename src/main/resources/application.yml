@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: enterprise-smart-agent-rag
+  datasource:
+    url: jdbc:mysql://localhost:3306/esar?useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 807806
+    driver-class-name: com.mysql.cj.jdbc.Driver

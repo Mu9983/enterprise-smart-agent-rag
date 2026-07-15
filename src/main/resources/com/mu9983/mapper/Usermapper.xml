@@ -6,6 +6,6 @@
 
 
     <select id="selectByUsernameAndPassword" resultType="com.mu9983.entity.User">
-        select id, username from user where username = #{username} and password = #{password}
+        select id, username, password from user where username = #{username} and password = #{password}
     </select>
 </mapper>
