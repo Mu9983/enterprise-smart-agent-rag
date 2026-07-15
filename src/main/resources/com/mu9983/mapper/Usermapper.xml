@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mu9983.mapper.UserMapper">
+
+
+    <select id="selectByUsernameAndPassword" resultType="com.mu9983.entity.User">
+        select id, username from user where username = #{username} and password = #{password}
+    </select>
+</mapper>
