@@ -2,6 +2,9 @@ package com.mu9983.entity;
 
 import lombok.Data;
 
+/**
+ * 标准返回类
+ */
 @Data
 public class Result {
 

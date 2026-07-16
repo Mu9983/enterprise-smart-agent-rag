@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * 过滤器，拦截所有请求，只放行登录
+ */
 @Component
 @Slf4j
 @WebFilter(urlPatterns = "/*")
@@ -21,6 +24,7 @@ public class TokenFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String token = request.getHeader("token");
+        // 将token交给ThreadLocal，以便在controller中复用
         UserContext.setToken(token);
         String requestURI = request.getRequestURI();
         if (requestURI.contains("/login")) {

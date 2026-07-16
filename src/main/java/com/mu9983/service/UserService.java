@@ -8,4 +8,6 @@ public interface UserService {
     LoginInfo login(User user);
 
     void logout(String token);
+
+    User currentUser();
 }

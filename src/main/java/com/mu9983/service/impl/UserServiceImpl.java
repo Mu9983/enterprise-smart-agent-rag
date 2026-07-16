@@ -6,13 +6,15 @@ import com.mu9983.entity.User;
 import com.mu9983.mapper.UserMapper;
 import com.mu9983.service.UserService;
 import com.mu9983.utils.JwtUtils;
+import com.mu9983.utils.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,7 +22,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private RedisTemplate<Object, Object> redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     /**
      * 登录接口
@@ -41,11 +43,11 @@ public class UserServiceImpl implements UserService {
         String token = JwtUtils.generateToken(claims);
         // 将token存入redis
         String redisKey = AuthConstant.LOGIN_TOKEN_PREFIX + token;
-        redisTemplate.opsForValue().set(redisKey,
+        stringRedisTemplate.opsForValue().set(
+                redisKey,
                 String.valueOf(user.getId()),
-                AuthConstant.TOKEN_EXPIRE_MINUTES,
-                TimeUnit.MINUTES
-                );
+                Duration.ofMinutes(AuthConstant.TOKEN_EXPIRE_MINUTES)
+        );
         // 封装返回信息
         LoginInfo loginInfo = new LoginInfo();
         loginInfo.setToken(token);
@@ -61,7 +63,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void logout(String token) {
         String  redisKey = AuthConstant.LOGIN_TOKEN_PREFIX + token;
-        redisTemplate.delete(redisKey);
+        stringRedisTemplate.delete(redisKey);
+    }
+
+    public User currentUser() {
+        // 获取当前用户token
+        String token = UserContext.getToken();
+        // 由token解码出id
+        String userIdStr = JwtUtils.parseToken(token).get("id").toString();
+        if (Objects.isNull(userIdStr)) {
+            return null;
+        }
+        Integer userId = Integer.parseInt(userIdStr);
+        return userMapper.selectById(userId);
     }
 
 
