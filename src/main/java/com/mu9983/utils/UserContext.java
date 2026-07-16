@@ -1,14 +1,16 @@
 package com.mu9983.utils;
 
+import java.util.Map;
+
 public class UserContext {
 
-    private static final ThreadLocal<String> USER_CONTEXT = new ThreadLocal<>();
+    private static final ThreadLocal<Map<String, String>> USER_CONTEXT = new ThreadLocal<>();
 
-    public static void setToken(String token) {
+    public static void setToken(Map<String, String> token) {
         USER_CONTEXT.set(token);
     }
 
-    public static String getToken() {
+    public static Map<String, String> getToken() {
         return USER_CONTEXT.get();
     }
 

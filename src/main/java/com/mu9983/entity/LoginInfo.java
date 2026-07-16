@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 /**
  * 用于确认登录信息
  */
@@ -11,8 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginInfo {
-    private Integer id;             // id
-    private String username;    // 用户名
-    private String password;    // 密码
-    private String token;       // 令牌
+    private Integer id;                 // id
+    private String username;            // 用户名
+    private String password;            // 密码
+    private Map<String, String> token;  // 令牌
 }
