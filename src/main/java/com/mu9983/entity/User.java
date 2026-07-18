@@ -18,4 +18,5 @@ public class User {
     private Integer age;        // 年龄
     private String email;       // 邮箱
     private String address;     // 地址
+    private Integer permission; // 权限
 }

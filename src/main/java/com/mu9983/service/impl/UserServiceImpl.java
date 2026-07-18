@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
         loginInfo.setToken(token);
         loginInfo.setUsername(u.getUsername());
         loginInfo.setId(u.getId());
+        loginInfo.setPermission(u.getPermission());
         return loginInfo;
     }
 
@@ -68,6 +69,7 @@ public class UserServiceImpl implements UserService {
                 + JwtUtils.parseToken(token.get("access_token")).get("id").toString();
         stringRedisTemplate.delete(redisKey);
         stringRedisTemplate.delete(userKey);
+        UserContext.removeToken();
     }
 
     /**
@@ -117,6 +119,7 @@ public class UserServiceImpl implements UserService {
         loginInfo.setToken(newToken);
         loginInfo.setUsername(user.getUsername());
         loginInfo.setId(user.getId());
+        loginInfo.setPermission(user.getPermission());
         return loginInfo;
     }
 

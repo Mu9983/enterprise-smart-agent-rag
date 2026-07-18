@@ -17,4 +17,5 @@ public class LoginInfo {
     private String username;            // 用户名
     private String password;            // 密码
     private Map<String, String> token;  // 令牌
+    private Integer permission;         // 权限
 }
