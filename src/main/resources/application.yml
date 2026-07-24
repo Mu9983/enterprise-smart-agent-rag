@@ -12,3 +12,9 @@ spring:
       port: 6379
       password: 807806
       database: 0
+  servlet:
+    multipart:
+      # 单个文件最大
+      max-file-size: 10MB
+      # 单次请求总文件大小
+      max-request-size: 50MB

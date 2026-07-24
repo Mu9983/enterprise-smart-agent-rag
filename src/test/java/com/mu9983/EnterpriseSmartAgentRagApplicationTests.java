@@ -19,13 +19,13 @@ class EnterpriseSmartAgentRagApplicationTests {
     /**
      * minio相关测试，与业务代码无关
      */
-    @Test
+    //@Test
     public void test01() throws Exception {
         boolean isExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket("minio-data").build());
         System.out.println("minio-data is exits?" + isExists);
     }
 
-    @Test
+    //@Test
     public void test02() throws Exception {
         boolean isExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket("minio-data").build());
         if (!isExists) {
@@ -33,7 +33,7 @@ class EnterpriseSmartAgentRagApplicationTests {
         }
     }
 
-    @Test
+    //@Test
     public void test03() throws Exception {
         File file = new File("D:\\DevelopingSoftware\\Java project\\Irena.jpg");
         ObjectWriteResponse objectWriteResponse = minioClient.putObject(PutObjectArgs.builder()
@@ -44,7 +44,7 @@ class EnterpriseSmartAgentRagApplicationTests {
         System.out.println(objectWriteResponse);
     }
 
-    @Test
+    //@Test
     public void test04() throws Exception {
         String presignedObjectUrl = minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                 .bucket("minio-data")
@@ -53,6 +53,11 @@ class EnterpriseSmartAgentRagApplicationTests {
                 .expiry(3, TimeUnit.MINUTES)
                 .build());
         System.out.println(presignedObjectUrl);
+    }
+
+    @Test
+    public void test05() throws Exception {
+
     }
 
 }
