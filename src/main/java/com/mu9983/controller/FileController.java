@@ -4,11 +4,11 @@ import com.mu9983.entity.Result;
 import com.mu9983.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequestMapping("/file")
@@ -29,4 +29,9 @@ public class FileController {
         return Result.success(upload);
     }
 
+    @GetMapping("/list")
+    public Result listFile(@RequestParam("bucketName") String bucketName) throws Exception {
+        List<Map<String, Object>> list = fileService.listObjects(bucketName);
+        return Result.success(list);
+    }
 }

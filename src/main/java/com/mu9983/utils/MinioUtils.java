@@ -2,10 +2,15 @@ package com.mu9983.utils;
 
 import io.minio.*;
 import io.minio.http.Method;
+import io.minio.messages.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -68,6 +73,33 @@ public class MinioUtils {
                 .method(method)
                 .expiry(duration, TimeUnit.MINUTES)
                 .build());
+    }
+
+    /**
+     * 遍历桶内文件
+     * @param bucketName 桶名
+     * @return 字符串
+     */
+    public List<Map<String, Object>> listObjects(String bucketName) {
+        Iterable<Result<Item>> results = minioClient.listObjects(ListObjectsArgs.builder()
+                .bucket(bucketName)
+                .recursive(false)
+                .build());
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (Result<Item> result : results) {
+            try {
+                Item item = result.get();
+                Map<String, Object> map = new HashMap<>();
+                map.put("fileName", item.objectName());
+                map.put("fileSize", item.size());
+                map.put("isFolder", item.isDir());
+                map.put("updatedTime", item.lastModified());
+                list.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
     }
 
 }

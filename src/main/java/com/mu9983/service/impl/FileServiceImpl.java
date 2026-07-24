@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class FileServiceImpl implements FileService {
 
@@ -27,6 +30,17 @@ public class FileServiceImpl implements FileService {
         }
         minioUtils.putObject(file, bucketName, objectName);
         return minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 3);
+    }
+
+    /**
+     * 文件列表
+     *
+     * @param bucketName 桶名
+     * @return 文件列表
+     */
+    @Override
+    public List<Map<String, Object>> listObjects(String bucketName){
+        return minioUtils.listObjects(bucketName);
     }
 
 }

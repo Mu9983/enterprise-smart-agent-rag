@@ -1,5 +1,6 @@
 package com.mu9983;
 
+import com.mu9983.utils.MinioUtils;
 import io.minio.*;
 import io.minio.http.Method;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,8 @@ class EnterpriseSmartAgentRagApplicationTests {
 
     @Autowired
     private MinioClient minioClient;
+    @Autowired
+    private MinioUtils minioUtils;
 
     /**
      * minio相关测试，与业务代码无关
@@ -57,7 +60,7 @@ class EnterpriseSmartAgentRagApplicationTests {
 
     @Test
     public void test05() throws Exception {
-
+        minioUtils.listObjects("myfile");
     }
 
 }
