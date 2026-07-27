@@ -1,6 +1,9 @@
 package com.mu9983.service.impl;
 
+import com.mu9983.entity.Document;
+import com.mu9983.mapper.FileMapper;
 import com.mu9983.service.FileService;
+import com.mu9983.service.UserService;
 import com.mu9983.utils.MinioUtils;
 import io.minio.http.Method;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +12,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class FileServiceImpl implements FileService {
 
     @Autowired
     private MinioUtils minioUtils;
+    @Autowired
+    private FileMapper fileMapper;
+    @Autowired
+    private UserService userService;
 
     /**
      * 上传文件
@@ -28,8 +37,19 @@ public class FileServiceImpl implements FileService {
         if (!minioUtils.bucketExits(bucketName)) {
             minioUtils.makeBucket(bucketName);
         }
-        minioUtils.putObject(file, bucketName, objectName);
-        return minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 3);
+        // 将二进制文件存入minio
+        String fileName = objectName.substring(0, objectName.lastIndexOf("."))
+                + "." + UUID.randomUUID()
+                + objectName.substring(objectName.lastIndexOf("."));
+        minioUtils.putObject(file, bucketName, fileName);
+        // 将文件签名存入mysql
+        String fileSuffix = Objects.requireNonNull(file.getOriginalFilename())
+                .substring(file.getOriginalFilename().lastIndexOf("."));
+        Document document = new Document(objectName, fileSuffix, file.getSize()
+                , bucketName + "/" + objectName
+                , userService.currentUser().getId(), "done");
+        fileMapper.insertFile(document);
+        return minioUtils.getPresignedObjectUrl(bucketName, fileName, Method.GET, 3);
     }
 
     /**

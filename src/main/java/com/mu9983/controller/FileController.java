@@ -22,7 +22,9 @@ public class FileController {
     public Result upload(@RequestParam("file") MultipartFile file,
                          @RequestParam("bucketName") String bucketName,
                          @RequestParam("objectName") String objectName) throws Exception {
+        log.info("文件上传");
         if (file == null || file.isEmpty()) {
+            log.error("文件为空");
             return Result.error("file is empty");
         }
         String upload = fileService.upload(file, bucketName, objectName);
@@ -31,7 +33,10 @@ public class FileController {
 
     @GetMapping("/list")
     public Result listFile(@RequestParam("bucketName") String bucketName) throws Exception {
+        log.info("文件列表");
         List<Map<String, Object>> list = fileService.listObjects(bucketName);
         return Result.success(list);
     }
+    
+
 }

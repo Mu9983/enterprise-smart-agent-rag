@@ -69,7 +69,6 @@ public class UserServiceImpl implements UserService {
                 + JwtUtils.parseToken(token.get("access_token")).get("id").toString();
         stringRedisTemplate.delete(redisKey);
         stringRedisTemplate.delete(userKey);
-        UserContext.removeToken();
     }
 
     /**

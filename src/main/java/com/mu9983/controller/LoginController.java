@@ -22,6 +22,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public Result login(@RequestBody User user){
+        log.info("controller线程：{}", Thread.currentThread().getName());
         log.info("登录");
         LoginInfo loginInfo = userService.login(user);
         if(loginInfo != null) {

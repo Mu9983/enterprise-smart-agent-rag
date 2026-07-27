@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mu9983.mapper.FileMapper">
+
+    <insert id="insertFile">
+        insert into document(file_name, file_suffix, file_size, minio_path, upload_user_id, process_status)
+            values(#{fileName}, #{fileSuffix}, #{fileSize}, #{minioPath}, #{uploadUserId}, #{processStatus})
+    </insert>
+</mapper>
