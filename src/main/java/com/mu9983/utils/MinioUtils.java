@@ -3,6 +3,7 @@ package com.mu9983.utils;
 import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Item;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,7 +50,7 @@ public class MinioUtils {
      * @param bucketName 桶名
      * @param objectName 文件名
      */
-    public ObjectWriteResponse putObject(MultipartFile file, String bucketName, String objectName) throws Exception {
+    public ObjectWriteResponse putObject(@NotNull MultipartFile file, String bucketName, String objectName) throws Exception {
         return minioClient.putObject(PutObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
@@ -100,6 +101,19 @@ public class MinioUtils {
             }
         }
         return list;
+    }
+
+    /**
+     * 删除文件
+     * @param bucketName 桶名
+     * @param objectName 文件名
+     * @throws Exception 删除失败
+     */
+    public void deleteObject(String bucketName, String objectName) throws Exception {
+        minioClient.removeObject(RemoveObjectArgs.builder()
+                .bucket(bucketName)
+                .object(objectName)
+                .build());
     }
 
 }

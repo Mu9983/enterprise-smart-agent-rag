@@ -5,7 +5,16 @@
 <mapper namespace="com.mu9983.mapper.FileMapper">
 
     <insert id="insertFile">
-        insert into document(file_name, file_suffix, file_size, minio_path, upload_user_id, process_status)
-            values(#{fileName}, #{fileSuffix}, #{fileSize}, #{minioPath}, #{uploadUserId}, #{processStatus})
+        insert into document(file_name, file_suffix, file_size, minio_path, upload_user_id, process_status, update_user_id)
+            values(#{fileName}, #{fileSuffix}, #{fileSize}, #{minioPath}, #{uploadUserId}, #{processStatus}, #{uploadUserId})
     </insert>
+
+    <select id="selectFile" resultType="int">
+        select id from document where file_name = #{objectName} and process_status = 'done'
+    </select>
+
+    <update id="updateFile">
+        update document set process_status = 'deleted', update_time = NOW(), update_user_id = #{userId} where id = #{fileId}
+    </update>
+
 </mapper>

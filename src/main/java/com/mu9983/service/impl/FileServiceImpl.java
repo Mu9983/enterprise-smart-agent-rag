@@ -6,6 +6,7 @@ import com.mu9983.service.FileService;
 import com.mu9983.service.UserService;
 import com.mu9983.utils.MinioUtils;
 import io.minio.http.Method;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,8 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
+@Slf4j
 @Service
 public class FileServiceImpl implements FileService {
 
@@ -39,7 +40,6 @@ public class FileServiceImpl implements FileService {
         }
         // 将二进制文件存入minio
         String fileName = objectName.substring(0, objectName.lastIndexOf("."))
-                + "." + UUID.randomUUID()
                 + objectName.substring(objectName.lastIndexOf("."));
         minioUtils.putObject(file, bucketName, fileName);
         // 将文件签名存入mysql
@@ -62,5 +62,26 @@ public class FileServiceImpl implements FileService {
     public List<Map<String, Object>> listObjects(String bucketName){
         return minioUtils.listObjects(bucketName);
     }
+
+    /**
+     * 文件删除
+     * @param bucketName 桶名
+     * @param objectName 文件名
+     * @return 删除成功与否
+     */
+    @Override
+    public boolean delete(String bucketName, String objectName) {
+        try {
+            if (!minioUtils.bucketExits(bucketName)) {
+                throw new Exception();
+            }
+            fileMapper.updateFile(fileMapper.selectFile(objectName), userService.currentUser().getId());
+            minioUtils.deleteObject(bucketName, objectName);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
 }

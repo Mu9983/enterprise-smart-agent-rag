@@ -37,6 +37,20 @@ public class FileController {
         List<Map<String, Object>> list = fileService.listObjects(bucketName);
         return Result.success(list);
     }
-    
+
+    @DeleteMapping("/delete")
+    public Result delete(@RequestParam("bucketName") String bucketName,
+                         @RequestParam("objectName") String objectName) {
+        log.info("文件删除");
+        boolean isDeleted = fileService.delete(bucketName, objectName);
+        if (isDeleted) {
+            log.info("文件删除成功");
+            return Result.success("文件删除成功");
+        }
+        else {
+            log.error("文件删除失败");
+            return Result.error("文件删除失败");
+        }
+    }
 
 }
