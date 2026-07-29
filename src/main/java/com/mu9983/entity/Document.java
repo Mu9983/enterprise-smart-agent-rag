@@ -21,6 +21,8 @@ public class Document {
     private Integer uploadUserId;           // 上传人ID
     private String processStatus;        // 处理状态：待解析/向量化中/完成/失败
     private LocalDateTime createTime;    // 创建时间
+    private LocalDateTime updateTime;    // 更新时间
+    private Integer updateUserId;        // 更新用户Id
 
     public Document(String fileName, String fileSuffix, Long fileSize, String minioPath, Integer uploadUserId, String processStatus) {
         this.fileName = fileName;

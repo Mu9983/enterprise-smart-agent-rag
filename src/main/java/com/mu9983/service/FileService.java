@@ -1,5 +1,6 @@
 package com.mu9983.service;
 
+import com.mu9983.entity.Document;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface FileService {
     List<Map<String, Object>> listObjects(String bucketName) throws Exception;
 
     boolean delete(String bucketName, String objectName);
+
+    List<Document> search(String key);
 }

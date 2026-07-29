@@ -1,5 +1,6 @@
 package com.mu9983.controller;
 
+import com.mu9983.entity.Document;
 import com.mu9983.entity.Result;
 import com.mu9983.service.FileService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ public class FileController {
 
     @Autowired
     private FileService fileService;
+
+    private static final String KK_URL = "http://192.168.75.128:8012/preview";
 
     @PostMapping("/upload")
     public Result upload(@RequestParam("file") MultipartFile file,
@@ -51,6 +54,16 @@ public class FileController {
             log.error("文件删除失败");
             return Result.error("文件删除失败");
         }
+    }
+
+    @GetMapping("/search")
+    public Result search(@RequestParam("key") String key) {
+        log.info("搜索文件");
+        List<Document> search = fileService.search(key);
+        if (search != null && !search.isEmpty()) {
+            return Result.success(search);
+        }
+        return Result.success("搜索结果为空");
     }
 
 }

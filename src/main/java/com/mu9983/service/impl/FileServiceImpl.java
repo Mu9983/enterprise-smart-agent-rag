@@ -75,12 +75,22 @@ public class FileServiceImpl implements FileService {
             if (!minioUtils.bucketExits(bucketName)) {
                 throw new Exception();
             }
-            fileMapper.updateFile(fileMapper.selectFile(objectName), userService.currentUser().getId());
+            fileMapper.updateFile(fileMapper.selectFileByFullName(objectName), userService.currentUser().getId());
             minioUtils.deleteObject(bucketName, objectName);
             return true;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * 文件查询
+     * @param key 关键词
+     * @return 文件查询结果
+     */
+    @Override
+    public List<Document> search(String key) {
+        return fileMapper.selectFileByKey(key);
     }
 
 
