@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -25,6 +27,9 @@ public class FileServiceImpl implements FileService {
     private FileMapper fileMapper;
     @Autowired
     private UserService userService;
+
+
+    private static final String KK_URL = "http://192.168.75.128:8012/onlinePreview";
 
     /**
      * 上传文件
@@ -91,6 +96,21 @@ public class FileServiceImpl implements FileService {
     @Override
     public List<Document> search(String key) {
         return fileMapper.selectFileByKey(key);
+    }
+
+    /**
+     * 文件预览
+     *
+     * @param bucketName 桶名
+     * @param objectName 文件名
+     * @return 文件kk预览链接
+     */
+    @Override
+    public String preview(String bucketName, String objectName, String fileSuffix) throws Exception {
+        String presignedURL = minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 60);
+        String encodeUrl = Base64.getEncoder().encodeToString(presignedURL.getBytes(StandardCharsets.UTF_8));
+        return KK_URL + "?url=" + encodeUrl;
+
     }
 
 

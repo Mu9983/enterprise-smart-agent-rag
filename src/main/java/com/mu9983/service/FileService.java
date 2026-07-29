@@ -15,4 +15,6 @@ public interface FileService {
     boolean delete(String bucketName, String objectName);
 
     List<Document> search(String key);
+
+    String preview(String bucketName, String objectName, String fileSuffix) throws Exception;
 }
