@@ -17,4 +17,6 @@ public interface FileService {
     List<Document> search(String key);
 
     String preview(String bucketName, String objectName, String fileSuffix) throws Exception;
+
+    List<Map<String, Object>> listBuckets();
 }

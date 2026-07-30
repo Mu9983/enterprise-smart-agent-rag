@@ -28,7 +28,6 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private UserService userService;
 
-
     private static final String KK_URL = "http://192.168.75.128:8012/onlinePreview";
 
     /**
@@ -111,6 +110,15 @@ public class FileServiceImpl implements FileService {
         String encodeUrl = Base64.getEncoder().encodeToString(presignedURL.getBytes(StandardCharsets.UTF_8));
         return KK_URL + "?url=" + encodeUrl;
 
+    }
+
+    /**
+     * 桶列表
+     * @return 桶列表
+     */
+    @Override
+    public List<Map<String, Object>> listBuckets() {
+        return minioUtils.listBuckets();
     }
 
 

@@ -78,4 +78,11 @@ public class FileController {
         }
         return null;
     }
+
+    @GetMapping("/buckets")
+    public Result listBuckets() {
+        log.info("桶列表");
+        List<Map<String, Object>> list = fileService.listBuckets();
+        return Result.success(list);
+    }
 }

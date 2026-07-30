@@ -2,6 +2,7 @@ package com.mu9983.utils;
 
 import io.minio.*;
 import io.minio.http.Method;
+import io.minio.messages.Bucket;
 import io.minio.messages.Item;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,26 @@ public class MinioUtils {
         minioClient.makeBucket(MakeBucketArgs.builder()
                 .bucket(bucketName)
                 .build());
+    }
+
+    /**
+     * 桶列表
+     */
+    public List<Map<String, Object>> listBuckets() {
+        Iterable<Result<Bucket>> results = minioClient.listBuckets(ListBucketsArgs.builder().build());
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (Result<Bucket> result : results) {
+            try {
+                Bucket bucket = result.get();
+                Map<String, Object> map = new HashMap<>();
+                map.put("name", bucket.name());
+                map.put("creationDate", bucket.creationDate());
+                list.add(map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
     }
 
     /**
