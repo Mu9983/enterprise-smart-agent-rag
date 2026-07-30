@@ -14,8 +14,8 @@ public class JwtUtils {
     private static final String SECRET_STR = "mu9983-jwt-secret-key-20260715-long-text-32chars";
     private static final SecretKey KEY = Keys.hmacShaKeyFor(SECRET_STR.getBytes(StandardCharsets.UTF_8));
 
-    // JWT自身有效期：10分钟
-    private static final long EXPIRATION = 1000 * 60 * 2;
+    // JWT自身有效期：60分钟
+    private static final long EXPIRATION = 1000 * 60 * 60;
 
     public static String generateToken(Map<String, Object> claims) {
         return Jwts.builder()

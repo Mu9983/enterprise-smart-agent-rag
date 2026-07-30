@@ -19,4 +19,6 @@ public interface FileService {
     String preview(String bucketName, String objectName, String fileSuffix) throws Exception;
 
     List<Map<String, Object>> listBuckets();
+
+    String download(String bucketName, String objectName) throws Exception;
 }

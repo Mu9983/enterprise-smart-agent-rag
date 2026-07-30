@@ -121,5 +121,17 @@ public class FileServiceImpl implements FileService {
         return minioUtils.listBuckets();
     }
 
+    /**
+     * 文件下载
+     *
+     * @param bucketName
+     * @param objectName 文件名
+     * @return 文件下载链接
+     */
+    @Override
+    public String download(String bucketName, String objectName) throws Exception {
+        return minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 5);
+    }
+
 
 }
