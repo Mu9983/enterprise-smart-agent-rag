@@ -23,4 +23,6 @@ public interface FileService {
     String download(String bucketName, String objectName) throws Exception;
 
     void makeBucket(String bucketName) throws Exception;
+
+    void removeBucket(String bucketName) throws Exception;
 }

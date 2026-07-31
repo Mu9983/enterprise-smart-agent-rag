@@ -142,5 +142,13 @@ public class FileServiceImpl implements FileService {
         minioUtils.makeBucket(bucketName);
     }
 
+    /**
+     * 删除桶
+     * @param bucketName 桶名
+     */
+    @Override
+    public void removeBucket(String bucketName) throws Exception {
+        minioUtils.removeBucket(bucketName);
+    }
 
 }

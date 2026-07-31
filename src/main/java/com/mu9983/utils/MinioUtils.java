@@ -143,4 +143,13 @@ public class MinioUtils {
                 .build());
     }
 
+    /**
+     * 删除桶
+     * @param bucketName 桶名
+     */
+    public void removeBucket(String bucketName) throws Exception {
+        minioClient.removeBucket(RemoveBucketArgs.builder()
+                .bucket(bucketName)
+                .build());
+    }
 }

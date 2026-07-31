@@ -109,4 +109,15 @@ public class FileController {
 
 
     }
+
+    @DeleteMapping("remove")
+    public Result removeBucket(@RequestParam("bucketName") String bucketName) {
+        log.info("删除桶");
+        try {
+            fileService.removeBucket(bucketName);
+            return Result.success("删除成功");
+        } catch (Exception e) {
+            return Result.error("删除失败");
+        }
+    }
 }
