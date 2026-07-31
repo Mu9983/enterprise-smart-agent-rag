@@ -112,10 +112,16 @@ public class MinioUtils {
             try {
                 Item item = result.get();
                 Map<String, Object> map = new HashMap<>();
-                map.put("fileName", item.objectName());
+                String  objectName = item.objectName();
+                map.put("fileName", objectName);
                 map.put("fileSize", item.size());
                 map.put("isFolder", item.isDir());
                 map.put("updatedTime", item.lastModified());
+                map.put("minioPath", bucketName + "/" + objectName);
+                if (objectName.lastIndexOf(".") != -1) {
+                    String suffix = objectName.substring(objectName.lastIndexOf(".") + 1);
+                    map.put("fileSuffix", suffix.toUpperCase());
+                }
                 list.add(map);
             } catch (Exception e) {
                 e.printStackTrace();

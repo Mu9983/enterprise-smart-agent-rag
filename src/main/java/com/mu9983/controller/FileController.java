@@ -96,4 +96,17 @@ public class FileController {
         List<Map<String, Object>> list = fileService.listBuckets();
         return Result.success(list);
     }
+
+    @PostMapping("/make")
+    public Result makeBucket(@RequestParam("bucketName") String bucketName) {
+        log.info("新建桶");
+        try {
+            fileService.makeBucket(bucketName);
+            return Result.success("创建成功");
+        } catch (Exception e) {
+            return  Result.error("创建失败");
+        }
+
+
+    }
 }

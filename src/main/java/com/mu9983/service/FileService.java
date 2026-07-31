@@ -21,4 +21,6 @@ public interface FileService {
     List<Map<String, Object>> listBuckets();
 
     String download(String bucketName, String objectName) throws Exception;
+
+    void makeBucket(String bucketName) throws Exception;
 }

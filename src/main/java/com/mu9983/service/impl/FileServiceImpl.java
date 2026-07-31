@@ -123,14 +123,23 @@ public class FileServiceImpl implements FileService {
 
     /**
      * 文件下载
-     *
-     * @param bucketName
+     * @param bucketName 桶名
      * @param objectName 文件名
      * @return 文件下载链接
      */
     @Override
     public String download(String bucketName, String objectName) throws Exception {
         return minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 5);
+    }
+
+    /**
+     * 新建桶
+     *
+     * @param bucketName 桶名
+     */
+    @Override
+    public void makeBucket(String bucketName) throws Exception {
+        minioUtils.makeBucket(bucketName);
     }
 
 
