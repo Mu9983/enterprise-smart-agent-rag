@@ -10,6 +10,6 @@
     </select>
 
     <select id="selectById" resultType="com.mu9983.entity.User">
-        select id, username, gender, age, email, address from user where id = #{id}
+        select id, username, gender, age, email, address, permission from user where id = #{id}
     </select>
 </mapper>

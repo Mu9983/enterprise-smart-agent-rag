@@ -97,6 +97,19 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.40</version>
         </dependency>
+        <!--aop依赖1：aspectjrt -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.9.5</version>
+        </dependency>
+
+        <!--aop依赖2： aspectjweaver -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.5</version>
+        </dependency>
     </dependencies>
 
     <build>

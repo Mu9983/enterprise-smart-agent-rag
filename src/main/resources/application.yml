@@ -21,3 +21,6 @@ spring:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+server:
+  port: 8080
+  address: 0.0.0.0

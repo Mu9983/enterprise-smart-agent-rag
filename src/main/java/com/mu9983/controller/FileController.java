@@ -1,5 +1,6 @@
 package com.mu9983.controller;
 
+import com.mu9983.annotation.RequireSuperAdmin;
 import com.mu9983.entity.Document;
 import com.mu9983.entity.Result;
 import com.mu9983.service.FileService;
@@ -110,6 +111,7 @@ public class FileController {
 
     }
 
+    @RequireSuperAdmin
     @DeleteMapping("remove")
     public Result removeBucket(@RequestParam("bucketName") String bucketName) {
         log.info("删除桶");
