@@ -2,12 +2,11 @@ package com.mu9983.controller;
 
 import com.mu9983.entity.Result;
 import com.mu9983.entity.User;
+import com.mu9983.entity.VerifyUserPassword;
 import com.mu9983.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -15,9 +14,9 @@ import java.util.Objects;
  * 获取当前用户
  */
 @Slf4j
-@RequestMapping
+@RequestMapping("/user")
 @RestController
-public class CurrentUserController {
+public class UserController {
 
     @Autowired
     private UserService userService;
@@ -31,5 +30,23 @@ public class CurrentUserController {
         }
         return Result.success(currentUser);
     }
+
+    @PostMapping("/verify")
+    public Result verify(@RequestBody VerifyUserPassword verifyUserPassword) {
+        log.info("验证身份");
+        boolean verifyPassword = userService.verifyPassword(verifyUserPassword);
+        if (verifyPassword) {
+            return Result.success();
+        }
+        return Result.error("验证失败");
+    }
+
+    @PostMapping("/update")
+    public Result update(@RequestBody User user) {
+        log.info("修改用户信息");
+        userService.changeUser(user);
+        return Result.success(user);
+    }
+
 
 }

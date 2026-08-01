@@ -3,6 +3,7 @@ package com.mu9983.service.impl;
 import com.mu9983.entity.LoginInfo;
 import com.mu9983.entity.RefreshToken;
 import com.mu9983.entity.User;
+import com.mu9983.entity.VerifyUserPassword;
 import com.mu9983.mapper.UserMapper;
 import com.mu9983.service.UserService;
 import com.mu9983.utils.JwtUtils;
@@ -120,6 +121,27 @@ public class UserServiceImpl implements UserService {
         loginInfo.setId(user.getId());
         loginInfo.setPermission(user.getPermission());
         return loginInfo;
+    }
+
+    /**
+     * 修改个人信息
+     *
+     * @param user 新信息
+     */
+    @Override
+    public void changeUser(User user) {
+        userMapper.updateUser(user);
+    }
+
+    /**
+     * 验证身份
+     * @param verifyUserPassword 身份
+     * @return 验证是否成功
+     */
+    @Override
+    public boolean verifyPassword(VerifyUserPassword verifyUserPassword) {
+        User user = userMapper.selectVerifyUserPassword(verifyUserPassword);
+        return user != null;
     }
 
 
