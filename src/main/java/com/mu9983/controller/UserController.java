@@ -7,6 +7,7 @@ import com.mu9983.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 
@@ -42,9 +43,13 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public Result update(@RequestBody User user) {
+    public Result update(@RequestPart("user") User user, @RequestParam(value = "avatar", required = false) MultipartFile avatar) {
         log.info("修改用户信息");
-        userService.changeUser(user);
+        try {
+            userService.changeUser(user, avatar);
+        } catch (Exception e) {
+            return Result.error("修改信息失败，请稍后重试");
+        }
         return Result.success(user);
     }
 

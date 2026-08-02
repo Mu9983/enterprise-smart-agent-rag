@@ -17,4 +17,6 @@ public interface FileMapper {
 
     void updateFile(@Param("fileId") int id, @Param("userId") int userId);
 
+    Integer selectFileByPath(@Param("path") String path, @Param("fileName") String fileName);
+
 }

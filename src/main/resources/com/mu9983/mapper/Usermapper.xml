@@ -9,11 +9,12 @@
     </select>
 
     <select id="selectById" resultType="com.mu9983.entity.User">
-        select id, username, gender, age, email, address, permission from user where id = #{id}
+        select id, username, gender, age, email, address, permission, avatar from user where id = #{id}
     </select>
 
     <update id="updateUser">
-        update user set username = #{username} , email = #{email}, address = #{address} where id = #{id}
+        update user set username = #{username}, email = #{email},
+                        address = #{address}, avatar = #{avatar} where id = #{id}
     </update>
 
     <select id="selectVerifyUserPassword" resultType="com.mu9983.entity.User">

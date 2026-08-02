@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -151,5 +148,15 @@ public class MinioUtils {
         minioClient.removeBucket(RemoveBucketArgs.builder()
                 .bucket(bucketName)
                 .build());
+    }
+
+    /**
+     * 头像文件上传
+     * @param avatar 头像文件
+     * @param id 头像文件id
+     */
+    public void uploadAvatar(@NotNull MultipartFile avatar, Integer id) throws Exception {
+        String avatarName = id + Objects.requireNonNull(avatar.getOriginalFilename()).substring(avatar.getOriginalFilename().lastIndexOf("."));
+        putObject(avatar, "avatar", avatarName);
     }
 }

@@ -5,6 +5,7 @@
 <mapper namespace="com.mu9983.mapper.FileMapper">
 
     <insert id="insertFile">
+
         insert into document(file_name, file_suffix, file_size, minio_path, upload_user_id, process_status, update_user_id)
             values(#{fileName}, #{fileSuffix}, #{fileSize}, #{minioPath}, #{uploadUserId}, #{processStatus}, #{uploadUserId})
     </insert>
@@ -17,6 +18,10 @@
         select id, file_name, file_suffix, file_size, minio_path, upload_user_id, process_status, create_time, update_time, update_user_id
         from document where file_name like concat('%', replace(replace(#{key}, '_', '\\_'), '%', '\\%'), '%')
         escape '\\' and process_status = 'done'
+    </select>
+
+    <select id="selectFileByPath" resultType="java.lang.Integer">
+        select id from document where file_name = #{fileName} and minio_path = #{path} and process_status = 'done'
     </select>
 
     <update id="updateFile">

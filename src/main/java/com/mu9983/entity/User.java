@@ -19,5 +19,5 @@ public class User {
     private String email;       // 邮箱
     private String address;     // 地址
     private Integer permission; // 权限
-    private String images;      // 头像
+    private String avatar;      // 头像
 }

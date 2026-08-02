@@ -1,20 +1,22 @@
 package com.mu9983.service.impl;
 
-import com.mu9983.entity.LoginInfo;
-import com.mu9983.entity.RefreshToken;
-import com.mu9983.entity.User;
-import com.mu9983.entity.VerifyUserPassword;
+import com.mu9983.entity.*;
+import com.mu9983.mapper.FileMapper;
 import com.mu9983.mapper.UserMapper;
 import com.mu9983.service.UserService;
 import com.mu9983.utils.JwtUtils;
+import com.mu9983.utils.MinioUtils;
 import com.mu9983.utils.UserContext;
+import io.minio.http.Method;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -24,6 +26,10 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private MinioUtils minioUtils;
+    @Autowired
+    private FileMapper fileMapper;
 
     /**
      * 登录接口
@@ -82,7 +88,14 @@ public class UserServiceImpl implements UserService {
         // 由token解码出id
         String accessToken = token.get("access_token");
         Integer userId = Integer.parseInt(JwtUtils.parseToken(accessToken).get("id").toString());
-        return userMapper.selectById(userId);
+        User user = userMapper.selectById(userId);
+        try {
+            user.setAvatar(minioUtils.getPresignedObjectUrl("avatar",
+                    user.getAvatar(), Method.GET, 7));
+        } catch (Exception e) {
+            user.setAvatar(null);
+        }
+        return user;
     }
 
     /**
@@ -129,7 +142,24 @@ public class UserServiceImpl implements UserService {
      * @param user 新信息
      */
     @Override
-    public void changeUser(User user) {
+    public void changeUser(User user, MultipartFile avatar) {
+        String avatarName;
+        if (avatar != null) {
+            String fileSuffix = Objects.requireNonNull(avatar.getOriginalFilename())
+                .substring(avatar.getOriginalFilename().lastIndexOf("."));
+            avatarName = user.getId().toString() + fileSuffix;
+            Document document = new Document(avatarName, fileSuffix, avatar.getSize()
+                    , "avatar" + "/" + avatarName
+                    , user.getId(), "done");
+            Integer fileId = fileMapper.selectFileByPath(document.getMinioPath(), avatarName);
+            if (fileId != null) {
+                fileMapper.updateFile(fileId, user.getId());
+            }
+            fileMapper.insertFile(document);
+        } else {
+            avatarName = userMapper.selectById(user.getId()).getAvatar();
+        }
+        user.setAvatar(avatarName);
         userMapper.updateUser(user);
     }
 
