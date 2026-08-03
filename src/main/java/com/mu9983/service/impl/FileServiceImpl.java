@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -118,7 +115,11 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public List<Map<String, Object>> listBuckets() {
-        return minioUtils.listBuckets();
+        List<Map<String, Object>> list = minioUtils.listBuckets();
+        if (userService.currentUser().getId() != 1) {
+            list.removeIf(map -> map.get("name").equals("avatar"));
+        }
+        return list;
     }
 
     /**

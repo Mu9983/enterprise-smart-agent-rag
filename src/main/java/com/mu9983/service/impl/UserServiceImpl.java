@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
      * @param user 新信息
      */
     @Override
-    public void changeUser(User user, MultipartFile avatar) {
+    public void changeUser(User user, MultipartFile avatar) throws Exception {
         String avatarName;
         if (avatar != null) {
             String fileSuffix = Objects.requireNonNull(avatar.getOriginalFilename())
@@ -155,6 +155,7 @@ public class UserServiceImpl implements UserService {
             if (fileId != null) {
                 fileMapper.updateFile(fileId, user.getId());
             }
+            minioUtils.putObject(avatar, "avatar", avatarName);
             fileMapper.insertFile(document);
         } else {
             avatarName = userMapper.selectById(user.getId()).getAvatar();
