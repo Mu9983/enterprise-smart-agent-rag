@@ -16,8 +16,9 @@ public class ChatController {
     private ConsultantService consultantService;
 
     @PostMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<String> chat(@RequestParam("message") String message) {
-        return consultantService.chat(message);
+    public Flux<String> chat(@RequestParam("memoryId") String memoryId,
+                             @RequestParam("message") String message) {
+        return consultantService.chat(memoryId, message);
     }
 
 }
