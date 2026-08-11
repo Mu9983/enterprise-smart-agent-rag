@@ -24,3 +24,16 @@ mybatis:
 server:
   port: 8080
   address: 0.0.0.0
+#open-ai相关配置
+langchain4j:
+  ollama:
+    chat-model:
+      base-url: http://127.0.0.1:11434
+      model-name: qwen3:0.6b
+      log-requests: true
+      log-responses: true
+    streaming-chat-model:
+      base-url: http://127.0.0.1:11434
+      model-name: qwen3:0.6b
+      log-requests: true
+      log-responses: true

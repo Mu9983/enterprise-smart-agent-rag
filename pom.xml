@@ -97,18 +97,44 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.40</version>
         </dependency>
-        <!--aop依赖1：aspectjrt -->
+<!--        aop依赖1：aspectjrt -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
             <version>1.9.5</version>
         </dependency>
-
-        <!--aop依赖2： aspectjweaver -->
+<!--        aop依赖2： aspectjweaver -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
             <version>1.9.5</version>
+        </dependency>
+<!--        AiServices依赖-->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-spring-boot4-starter</artifactId>
+            <version>1.17.0-beta27</version>
+        </dependency>
+<!--        ollama4j依赖-->
+        <dependency>
+            <groupId>io.github.amithkoujalgi</groupId>
+            <artifactId>ollama4j</artifactId>
+            <version>1.0.45</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-ollama-spring-boot4-starter</artifactId>
+            <version>1.17.0-beta27</version>
+        </dependency>
+<!--        流式调用相关依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-reactor</artifactId>
+            <version>1.17.0-beta27</version>
         </dependency>
     </dependencies>
 
