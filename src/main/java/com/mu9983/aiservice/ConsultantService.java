@@ -10,7 +10,6 @@ import reactor.core.publisher.Flux;
 @AiService(
         wiringMode = AiServiceWiringMode.AUTOMATIC,
         streamingChatModel = "ollamaStreamingChatModel",
-//        chatMemory = "chatMemory",
         chatMemoryProvider = "chatMemoryProvider"
 )
 public interface ConsultantService {

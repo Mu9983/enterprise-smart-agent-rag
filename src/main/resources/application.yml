@@ -37,3 +37,6 @@ langchain4j:
       model-name: qwen3:0.6b
       log-requests: true
       log-responses: true
+    embedding-model:
+      base-url: http://127.0.0.1:11434
+      model-name: qwen3-embedding:0.6b

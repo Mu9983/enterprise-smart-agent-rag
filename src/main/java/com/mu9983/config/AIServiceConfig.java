@@ -14,6 +14,9 @@ public class AIServiceConfig {
     @Autowired
     private RedisChatMemoryStore redisChatMemoryStore;
 
+    /**
+     * 对话模型
+     */
     @Bean
     public ChatMemory chatMemory() {
         return MessageWindowChatMemory.builder()
@@ -21,6 +24,9 @@ public class AIServiceConfig {
                 .build();
     }
 
+    /**
+     * 对话记忆
+     */
     @Bean
     public ChatMemoryProvider chatMemoryProvider() {
         return memoryId -> MessageWindowChatMemory.builder()
