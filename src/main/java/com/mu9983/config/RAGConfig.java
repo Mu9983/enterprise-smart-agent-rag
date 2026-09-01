@@ -1,45 +1,49 @@
 package com.mu9983.config;
 
-import dev.langchain4j.data.document.Document;
-import dev.langchain4j.data.document.DocumentSplitter;
-import dev.langchain4j.data.document.loader.ClassPathDocumentLoader;
-import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
-import dev.langchain4j.data.document.splitter.DocumentSplitters;
+import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
-import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
-import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
+import dev.langchain4j.store.embedding.milvus.MilvusEmbeddingStore;
+import io.milvus.client.MilvusServiceClient;
+import io.milvus.param.collection.DropCollectionParam;
+import io.milvus.param.collection.HasCollectionParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 @Configuration
 public class RAGConfig {
 
     @Autowired
     private EmbeddingModel embeddingModel;
+    @Autowired
+    private MilvusServiceClient milvusServiceClient;
+
+    private static final String COLLECTION_NAME = "rag";
+
 
     /**
-     * 加载文件进内存并分割向量化存储
+     * 加载文件进milvus官方存储并分割向量化存储
      * @return
      */
     @SuppressWarnings({"all"})
     @Bean
-    public EmbeddingStore store() {
-        List<Document> documents = ClassPathDocumentLoader.loadDocuments("content", new ApachePdfBoxDocumentParser());
-        InMemoryEmbeddingStore store = new InMemoryEmbeddingStore();
-        DocumentSplitter splitter = DocumentSplitters.recursive(500, 100);
-        EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
-                .embeddingStore(store)
-                .embeddingModel(embeddingModel)
-                .documentSplitter(splitter)
+    public EmbeddingStore<TextSegment> store() {
+        if (milvusServiceClient.hasCollection(HasCollectionParam.newBuilder()
+                .withCollectionName(COLLECTION_NAME)
+                .build()).getData()) {
+            milvusServiceClient.dropCollection(DropCollectionParam.newBuilder()
+                .withCollectionName(COLLECTION_NAME)
+                .build());
+        }
+        return MilvusEmbeddingStore.builder()
+                .milvusClient(milvusServiceClient)
+                .collectionName(COLLECTION_NAME)
+                .autoFlushOnInsert(true)
+                .dimension(1024)
                 .build();
-        ingestor.ingest(documents);
-        return store;
     }
 
     /**

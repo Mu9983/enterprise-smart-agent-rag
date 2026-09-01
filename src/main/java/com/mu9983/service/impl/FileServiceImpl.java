@@ -24,6 +24,8 @@ public class FileServiceImpl implements FileService {
     private FileMapper fileMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private DocumentIngestionService documentIngestionService;
 
     private static final String KK_URL = "http://192.168.75.128:8012/onlinePreview";
 
@@ -50,6 +52,8 @@ public class FileServiceImpl implements FileService {
                 , bucketName + "/" + objectName
                 , userService.currentUser().getId(), "done");
         fileMapper.insertFile(document);
+        // 将文件切片存入milvus
+        documentIngestionService.ingestFromUrl(minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 3));
         return minioUtils.getPresignedObjectUrl(bucketName, fileName, Method.GET, 3);
     }
 
