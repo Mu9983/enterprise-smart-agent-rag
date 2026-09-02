@@ -25,7 +25,7 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private UserService userService;
     @Autowired
-    private DocumentIngestionService documentIngestionService;
+    private DocumentServiceImpl documentServiceImpl;
 
     private static final String KK_URL = "http://192.168.75.128:8012/onlinePreview";
 
@@ -48,12 +48,18 @@ public class FileServiceImpl implements FileService {
         // 将文件签名存入mysql
         String fileSuffix = Objects.requireNonNull(file.getOriginalFilename())
                 .substring(file.getOriginalFilename().lastIndexOf("."));
+        String path = bucketName + "/" + fileName;
+        Integer fileId = fileMapper.selectFileByPath(path, fileName);
+        Integer userId = userService.currentUser().getId();
+        if (fileId != null) {
+            fileMapper.updateFile(fileId, userId);
+        }
         Document document = new Document(objectName, fileSuffix, file.getSize()
-                , bucketName + "/" + objectName
-                , userService.currentUser().getId(), "done");
+                , path, userId, "done");
         fileMapper.insertFile(document);
         // 将文件切片存入milvus
-        documentIngestionService.ingestFromUrl(minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 3));
+        documentServiceImpl.ingestFromUrl(minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 3),
+                objectName, userId);
         return minioUtils.getPresignedObjectUrl(bucketName, fileName, Method.GET, 3);
     }
 
@@ -81,6 +87,7 @@ public class FileServiceImpl implements FileService {
                 throw new Exception();
             }
             fileMapper.updateFile(fileMapper.selectFileByFullName(objectName), userService.currentUser().getId());
+            documentServiceImpl.deleteDocument(objectName);
             minioUtils.deleteObject(bucketName, objectName);
             return true;
         } catch (Exception e) {
@@ -153,6 +160,12 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public void removeBucket(String bucketName) throws Exception {
+        List<Map<String, Object>> list = listObjects(bucketName);
+        if (!list.isEmpty()) {
+            for (Map<String, Object> map : list) {
+                delete(bucketName, map.get("fileName").toString());
+            }
+        }
         minioUtils.removeBucket(bucketName);
     }
 

@@ -7,8 +7,6 @@ import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.milvus.MilvusEmbeddingStore;
 import io.milvus.client.MilvusServiceClient;
-import io.milvus.param.collection.DropCollectionParam;
-import io.milvus.param.collection.HasCollectionParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +19,7 @@ public class RAGConfig {
     @Autowired
     private MilvusServiceClient milvusServiceClient;
 
-    private static final String COLLECTION_NAME = "rag";
+    public static final String COLLECTION_NAME = "rag";
 
 
     /**
@@ -31,13 +29,6 @@ public class RAGConfig {
     @SuppressWarnings({"all"})
     @Bean
     public EmbeddingStore<TextSegment> store() {
-        if (milvusServiceClient.hasCollection(HasCollectionParam.newBuilder()
-                .withCollectionName(COLLECTION_NAME)
-                .build()).getData()) {
-            milvusServiceClient.dropCollection(DropCollectionParam.newBuilder()
-                .withCollectionName(COLLECTION_NAME)
-                .build());
-        }
         return MilvusEmbeddingStore.builder()
                 .milvusClient(milvusServiceClient)
                 .collectionName(COLLECTION_NAME)
@@ -61,5 +52,10 @@ public class RAGConfig {
                 .embeddingModel(embeddingModel)
                 .build();
     }
+
+//    public void addField(String fieldName, String fieldValue) {
+//        milvusServiceClient.
+//    }
+
 
 }
