@@ -55,6 +55,4 @@ public class DocumentServiceImpl {
                 .build());
     }
 
-    //TODO:重启时重新加载milvus数据库
-
 }

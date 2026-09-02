@@ -53,9 +53,4 @@ public class RAGConfig {
                 .build();
     }
 
-//    public void addField(String fieldName, String fieldValue) {
-//        milvusServiceClient.
-//    }
-
-
 }
