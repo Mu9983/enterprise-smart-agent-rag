@@ -1,7 +1,6 @@
 package com.mu9983.config;
 
 import com.mu9983.repository.RedisChatMemoryStore;
-import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +12,6 @@ public class AIServiceConfig {
 
     @Autowired
     private RedisChatMemoryStore redisChatMemoryStore;
-
-    /**
-     * 对话模型
-     */
-    @Bean
-    public ChatMemory chatMemory() {
-        return MessageWindowChatMemory.builder()
-                .maxMessages(20)
-                .build();
-    }
 
     /**
      * 对话记忆
