@@ -58,8 +58,12 @@ public class FileServiceImpl implements FileService {
                 , path, userId, "done");
         fileMapper.insertFile(document);
         // 将文件切片存入milvus
-        documentServiceImpl.ingestFromUrl(minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 3),
-                objectName, userId);
+        try {
+            documentServiceImpl.ingestFromUrl(minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 3),
+                    objectName, userId);
+        } catch (Exception e) {
+            log.error("文件为{}格式，不予切片", fileSuffix);
+        }
         return minioUtils.getPresignedObjectUrl(bucketName, fileName, Method.GET, 3);
     }
 
