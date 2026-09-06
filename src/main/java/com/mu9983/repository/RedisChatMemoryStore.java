@@ -30,11 +30,16 @@ public class RedisChatMemoryStore implements ChatMemoryStore {
         // 1.list转成json数据
         String json = ChatMessageSerializer.messagesToJson(list);
         // 2.json存到redis中
-        stringRedisTemplate.opsForValue().set(memoryId.toString(), json, Duration.ofDays(1));
+        stringRedisTemplate.opsForValue().set(memoryId.toString(), json, Duration.ofDays(7));
     }
 
     @Override
     public void deleteMessages(Object memoryId) {
         stringRedisTemplate.delete(memoryId.toString());
+    }
+
+    public String getMessagesAsJson(Object memoryId) {
+        return stringRedisTemplate.opsForValue().get(memoryId.toString());
+
     }
 }

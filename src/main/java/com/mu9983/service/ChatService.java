@@ -7,4 +7,6 @@ public interface ChatService {
     Flux<String> streamChat(String memoryId, String message);
 
     void delete(String memoryId);
+
+    String getRecord(String memoryId);
 }
