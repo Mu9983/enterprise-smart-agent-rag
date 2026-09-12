@@ -122,4 +122,15 @@ public class FileController {
             return Result.error("删除失败");
         }
     }
+
+    @PostMapping("/reupload")
+    public Result reUpload(@RequestParam("fileId") Integer fileId) {
+        log.info("重新上传文件docId={}", fileId);
+        String url = fileService.reUpload(fileId);
+        if (url.isEmpty()) {
+            log.error("重传文件docId={}失败", fileId);
+            return Result.error("重传文件失败");
+        }
+        return Result.success(url);
+    }
 }

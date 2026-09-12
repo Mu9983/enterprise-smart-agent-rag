@@ -5,7 +5,6 @@
 <mapper namespace="com.mu9983.mapper.FileMapper">
 
     <insert id="insertFile">
-
         insert into document(file_name, file_suffix, file_size, minio_path, upload_user_id, process_status, update_user_id)
             values(#{fileName}, #{fileSuffix}, #{fileSize}, #{minioPath}, #{uploadUserId}, #{processStatus}, #{uploadUserId})
     </insert>
@@ -28,9 +27,14 @@
         select id from document where file_name = #{fileName} and minio_path = #{path} and process_status = 'success'
     </select>
 
-    <select id="getStatusByName" resultType="java.lang.String" flushCache="true">
-        select process_status from document where file_name = #{fileName} and process_status in ('pending', 'proceeding', 'success', 'fail')
+    <select id="getById" resultType="com.mu9983.entity.Document">
+        select * from document where id = #{fileId}
     </select>
+
+    <select id="getByName" resultType="com.mu9983.entity.Document">
+        select * from document where file_name = #{fileName} and process_status in ('pending', 'processing', 'success', 'fail')
+    </select>
+
 
     <update id="updateFile">
         update document set process_status = 'deleted', update_time = NOW(), update_user_id = #{userId} where id = #{fileId}

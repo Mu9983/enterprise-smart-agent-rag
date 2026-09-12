@@ -21,7 +21,9 @@ public interface FileMapper {
 
     Integer selectFileByPath(@Param("path") String path, @Param("fileName") String fileName);
 
-    String getStatusByName(@Param("fileName") String fileName);
+    Document getByName(@Param("fileName") String fileName);
 
     Integer getFileIdByFullName(@Param("objectName") String objectName);
+
+    Document getById(@Param("fileId") int fileId);
 }

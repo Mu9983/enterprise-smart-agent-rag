@@ -41,7 +41,6 @@ public class DocumentServiceImpl {
     public void ingestFromUrl(String url, Integer fileId, Integer userId){
         try {
             log.info("文档docId={}处理中", fileId);
-
             Document document = LoadUtils.autoLoader(url);
             fileMapper.updateFileStatus(fileId, userId, PROCESSING);
             Metadata meta = document.metadata();

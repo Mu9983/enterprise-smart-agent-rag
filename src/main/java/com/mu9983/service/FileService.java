@@ -25,4 +25,6 @@ public interface FileService {
     void makeBucket(String bucketName) throws Exception;
 
     void removeBucket(String bucketName) throws Exception;
+
+    String reUpload(Integer fileId);
 }

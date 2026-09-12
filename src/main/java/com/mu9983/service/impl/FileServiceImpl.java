@@ -84,8 +84,8 @@ public class FileServiceImpl implements FileService {
         List<Map<String, Object>> list = minioUtils.listObjects(bucketName);
         for (Map<String, Object> map : list) {
             String fileName = map.get("fileName").toString();
-            String status = fileMapper.getStatusByName(fileName);
-            map.put("status", status);
+            map.put("status", fileMapper.getByName(fileName).getProcessStatus());
+            map.put("fileId", fileMapper.getByName(fileName).getId());
         }
         return list;
     }
@@ -186,5 +186,27 @@ public class FileServiceImpl implements FileService {
         }
         minioUtils.removeBucket(bucketName);
     }
+
+    /**
+     * 重新上传文件
+     * @param fileId       文件id
+     * @return url
+     */
+    @Override
+    public String reUpload(Integer fileId) {
+        try {
+            Document file = fileMapper.getById(fileId);
+            if (file == null) {
+                return null;
+            }
+            String url = minioUtils.getPresignedObjectUrl(file.getMinioPath().split("/")[0],
+                    file.getFileName(), Method.GET, 3);
+            documentParseExecutor.submit(() -> documentServiceImpl.ingestFromUrl(url, fileId, file.getUpdateUserId()));
+            return url;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 
 }
