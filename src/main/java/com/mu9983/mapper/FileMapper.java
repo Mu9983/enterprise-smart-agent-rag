@@ -17,6 +17,11 @@ public interface FileMapper {
 
     void updateFile(@Param("fileId") int id, @Param("userId") int userId);
 
+    void updateFileStatus(@Param("fileId") int id, @Param("userId") int userId, @Param("status") String status);
+
     Integer selectFileByPath(@Param("path") String path, @Param("fileName") String fileName);
 
+    String getStatusByName(@Param("fileName") String fileName);
+
+    Integer getFileIdByFullName(@Param("objectName") String objectName);
 }

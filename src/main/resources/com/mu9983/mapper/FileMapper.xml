@@ -10,22 +10,36 @@
             values(#{fileName}, #{fileSuffix}, #{fileSize}, #{minioPath}, #{uploadUserId}, #{processStatus}, #{uploadUserId})
     </insert>
 
+    <select id="getFileIdByFullName" resultType="java.lang.Integer">
+        select id from document where file_name = #{objectName} and process_status in ('success', 'fail')
+    </select>
+
     <select id="selectFileByFullName" resultType="java.lang.Integer">
-        select id from document where file_name = #{objectName} and process_status = 'done'
+        select id from document where file_name = #{objectName} and process_status = 'pending'
     </select>
 
     <select id="selectFileByKey" resultType="com.mu9983.entity.Document">
         select id, file_name, file_suffix, file_size, minio_path, upload_user_id, process_status, create_time, update_time, update_user_id
         from document where file_name like concat('%', replace(replace(#{key}, '_', '\\_'), '%', '\\%'), '%')
-        escape '\\' and process_status = 'done'
+        escape '\\' and process_status = 'success'
     </select>
 
     <select id="selectFileByPath" resultType="java.lang.Integer">
-        select id from document where file_name = #{fileName} and minio_path = #{path} and process_status = 'done'
+        select id from document where file_name = #{fileName} and minio_path = #{path} and process_status = 'success'
+    </select>
+
+    <select id="getStatusByName" resultType="java.lang.String" flushCache="true">
+        select process_status from document where file_name = #{fileName} and process_status in ('pending', 'proceeding', 'success', 'fail')
     </select>
 
     <update id="updateFile">
         update document set process_status = 'deleted', update_time = NOW(), update_user_id = #{userId} where id = #{fileId}
     </update>
+
+    <update id="updateFileStatus">
+        update document set process_status = #{status}, update_time = NOW(), update_user_id = #{userId} where id = #{fileId}
+    </update>
+
+
 
 </mapper>

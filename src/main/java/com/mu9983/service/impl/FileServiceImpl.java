@@ -8,11 +8,15 @@ import com.mu9983.utils.MinioUtils;
 import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+
+import static com.mu9983.entity.Document.*;
 
 @Slf4j
 @Service
@@ -26,8 +30,12 @@ public class FileServiceImpl implements FileService {
     private UserService userService;
     @Autowired
     private DocumentServiceImpl documentServiceImpl;
+    @Autowired
+    @Qualifier("documentParseExecutor")
+    private ExecutorService documentParseExecutor;
 
     private static final String KK_URL = "http://192.168.75.128:8012/onlinePreview";
+
 
     /**
      * 上传文件
@@ -52,19 +60,17 @@ public class FileServiceImpl implements FileService {
         Integer fileId = fileMapper.selectFileByPath(path, fileName);
         Integer userId = userService.currentUser().getId();
         if (fileId != null) {
-            fileMapper.updateFile(fileId, userId);
+            fileMapper.updateFileStatus(fileId, userId, DELETED);
         }
         Document document = new Document(objectName, fileSuffix, file.getSize()
-                , path, userId, "done");
+                , path, userId, PENDING);
         fileMapper.insertFile(document);
+        fileId = fileMapper.selectFileByFullName(objectName);
+        document.setId(fileId);
+        String url = minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 3);
         // 将文件切片存入milvus
-        try {
-            documentServiceImpl.ingestFromUrl(minioUtils.getPresignedObjectUrl(bucketName, objectName, Method.GET, 3),
-                    objectName, userId);
-        } catch (Exception e) {
-            log.error("文件为{}格式，不予切片", fileSuffix);
-        }
-        return minioUtils.getPresignedObjectUrl(bucketName, fileName, Method.GET, 3);
+        documentParseExecutor.submit(() -> documentServiceImpl.ingestFromUrl(url, document.getId(), userId));
+        return url;
     }
 
     /**
@@ -75,7 +81,13 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public List<Map<String, Object>> listObjects(String bucketName){
-        return minioUtils.listObjects(bucketName);
+        List<Map<String, Object>> list = minioUtils.listObjects(bucketName);
+        for (Map<String, Object> map : list) {
+            String fileName = map.get("fileName").toString();
+            String status = fileMapper.getStatusByName(fileName);
+            map.put("status", status);
+        }
+        return list;
     }
 
     /**
@@ -90,11 +102,13 @@ public class FileServiceImpl implements FileService {
             if (!minioUtils.bucketExits(bucketName)) {
                 throw new Exception();
             }
-            fileMapper.updateFile(fileMapper.selectFileByFullName(objectName), userService.currentUser().getId());
-            documentServiceImpl.deleteDocument(objectName);
+            int id = fileMapper.getFileIdByFullName(objectName);
+            fileMapper.updateFileStatus(id, userService.currentUser().getId(), DELETED);
+            documentServiceImpl.deleteDocument(id);
             minioUtils.deleteObject(bucketName, objectName);
             return true;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }

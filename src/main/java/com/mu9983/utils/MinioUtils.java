@@ -109,7 +109,7 @@ public class MinioUtils {
             try {
                 Item item = result.get();
                 Map<String, Object> map = new HashMap<>();
-                String  objectName = item.objectName();
+                String objectName = item.objectName();
                 map.put("fileName", objectName);
                 map.put("fileSize", item.size());
                 map.put("isFolder", item.isDir());
@@ -150,13 +150,4 @@ public class MinioUtils {
                 .build());
     }
 
-    /**
-     * 头像文件上传
-     * @param avatar 头像文件
-     * @param id 头像文件id
-     */
-    public void uploadAvatar(@NotNull MultipartFile avatar, Integer id) throws Exception {
-        String avatarName = id + Objects.requireNonNull(avatar.getOriginalFilename()).substring(avatar.getOriginalFilename().lastIndexOf("."));
-        putObject(avatar, "avatar", avatarName);
-    }
 }

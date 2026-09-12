@@ -24,6 +24,12 @@ public class Document {
     private LocalDateTime updateTime;    // 更新时间
     private Integer updateUserId;        // 更新用户Id
 
+    public static final String PENDING = "pending";
+    public static final String PROCESSING = "processing";
+    public static final String SUCCESS = "success";
+    public static final String FAIL = "fail";
+    public static final String DELETED = "deleted";
+
     public Document(String fileName, String fileSuffix, Long fileSize, String minioPath, Integer uploadUserId, String processStatus) {
         this.fileName = fileName;
         this.fileSuffix = fileSuffix;
