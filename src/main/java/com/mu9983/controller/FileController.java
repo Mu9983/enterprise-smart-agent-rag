@@ -98,6 +98,7 @@ public class FileController {
         return Result.success(list);
     }
 
+    @RequireSuperAdmin
     @PostMapping("/make")
     public Result makeBucket(@RequestParam("bucketName") String bucketName) {
         log.info("新建桶");

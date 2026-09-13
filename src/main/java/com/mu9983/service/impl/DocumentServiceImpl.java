@@ -67,7 +67,7 @@ public class DocumentServiceImpl {
     public void deleteDocument(Integer docId){
         milvusServiceClient.delete(DeleteParam.newBuilder()
                 .withCollectionName(COLLECTION_NAME)
-                .withExpr("metadata[\"doc_id\"] == \"" + docId+ "\"")
+                .withExpr("metadata[\"doc_id\"] == " + docId)
                 .build());
     }
 
